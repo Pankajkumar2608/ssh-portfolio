@@ -281,12 +281,12 @@ func (m model) viewMenu() string {
 	var b strings.Builder
 
 	banner := `
-██████╗  █████╗ ███╗   ██╗██╗  ██╗ █████╗      ██╗ ██████╗ ███████╗
-██╔══██╗██╔══██╗████╗  ██║██║ ██╔╝██╔══██╗     ██║██╔═══██╗██╔════╝
-██████╔╝███████║██╔██╗ ██║█████╔╝ ███████║     ██║██║   ██║███████╗
-██╔═══╝ ██╔══██║██║╚██╗██║██╔═██╗ ██╔══██║██   ██║██║   ██║╚════██║
-██║     ██║  ██║██║ ╚████║██║  ██╗██║  ██║╚█████╔╝╚██████╔╝███████║
-╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚════╝  ╚═════╝ ╚══════╝`
+██████╗  █████╗ ███╗   ██╗██╗  ██╗ █████╗      ██╗
+██╔══██╗██╔══██╗████╗  ██║██║ ██╔╝██╔══██╗     ██║
+██████╔╝███████║██╔██╗ ██║█████╔╝ ███████║     ██║
+██╔═══╝ ██╔══██║██║╚██╗██║██╔═██╗ ██╔══██║██   ██║
+██║     ██║  ██║██║ ╚████║██║  ██╗██║  ██║╚█████╔╝
+╚═╝     ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚════╝  `
 
 	b.WriteString(lipgloss.NewStyle().Foreground(accent).Render(banner))
 	b.WriteString("\n")
@@ -482,11 +482,11 @@ func (m model) viewContact() string {
 	return b.String()
 }
 
-// ── SSH Server ────────────────────────────────────────────────────────────────
+//  SSH Server
 
 func main() {
 	s, err := wish.NewServer(
-		wish.WithAddress(net.JoinHostPort("0.0.0.0", "2323")),
+		wish.WithAddress(net.JoinHostPort("0.0.0.0", "22")),
 		wish.WithHostKeyPath(".ssh/id_ed25519"),
 		wish.WithMiddleware(
 			wishbubble.Middleware(teaHandler),
@@ -497,8 +497,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Println("PankajOS SSH portfolio running on :2323")
-	log.Println("Connect with: ssh localhost -p 2323")
+	log.Println("PankajOS SSH portfolio running on : 22")
+	log.Println("Connect with: ssh localhost -p 22")
 	log.Fatal(s.ListenAndServe())
 }
 
