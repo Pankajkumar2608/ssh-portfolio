@@ -1,0 +1,35 @@
+name : Deploy
+
+on:
+  push:
+    branches: [main]
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build & push Docker image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/portfolio:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/portfolio:latest
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKER_USERNAME }}/portfolio:latest
+            docker stop portfolio || true
+            docker rm portfolio || true
+            docker run -d \
+              --name portfolio \
+              --restart always \
+              -p 2323:2323 \
+              -v ~/.ssh:/root/.ssh \
+              ${{ secrets.DOCKER_USERNAME }}/portfolio:latest
